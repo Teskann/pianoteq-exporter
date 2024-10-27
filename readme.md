@@ -30,22 +30,23 @@ Modify the following script according to your preferences and store it in `~` us
 ```bash
 #!/bin/bash
 
-# Variables
+# Settings to customize
 REMOTE_USER="piano"
 REMOTE_HOST="192.168.1.99"  # URL of your machine running Pianoteq
-DESTINATION="/data/data/com/termux/files/home/storage/download/"  # Android Download folder
+DESTINATION="/data/data/com.termux/files/home/storage/download/"  # Android Download folder
 INDEX=${1:-1}
 
+# Export last played midi to wav
 ssh ${REMOTE_USER}@${REMOTE_HOST} "bash -s" << EOF
-    python3 "/home/piano/pianoteq-exporter/pianoteq-exporter.py" --ptq-path "/home/piano/pianoteq/Pianoteq 8" --index-of-midi-to-export ${INDEX}
+    python3 "/home/${REMOTE_USER}/pianoteq-exporter/pianoteq-exporter.py" --ptq-path "/home/${REMOTE_USER}/pianoteq/Pianoteq 8" --index-of-midi-to-export ${INDEX}
 EOF
 
 # Copy exported wav file
-scp ${REMOTE_USER}@${REMOTE_HOST}:/home/piano/pianoteq-exports/* ${DESTINATION}
+scp ${REMOTE_USER}@${REMOTE_HOST}:/home/${REMOTE_USER}/pianoteq-exports/* ${DESTINATION}
 
 # Clear exports folder
 ssh ${REMOTE_USER}@${REMOTE_HOST} "bash -s" << EOF
-    rm /home/piano/pianoteq-exports/*
+    rm /home/${REMOTE_USER}/pianoteq-exports/*
 EOF
 ```
 
